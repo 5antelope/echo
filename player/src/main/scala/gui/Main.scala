@@ -1,3 +1,5 @@
+import java.io.File
+
 import com.sun.javafx.runtime.VersionInfo
 import module.SongModel
 
@@ -9,16 +11,27 @@ import scalafx.scene.input.{TransferMode, DragEvent}
 import scalafx.scene.layout.{BorderPane, HBox, Priority, VBox}
 
 object Main extends JFXApp {
+
   println("JavaFX version: " + VersionInfo.getRuntimeVersion)
 
   private final val songModel = new SongModel() {
-    url = "http://traffic.libsyn.com/dickwall/JavaPosse373.mp3"
+    //url = "http://traffic.libsyn.com/dickwall/JavaPosse373.mp3"
+    url = new File("./music.mp3").toURI().toString()
+    print("URL: ")
+    println(url)
   }
+
+  SongModel.url = new File("./music.mp3").toURI().toString()
+
+//  ClusterConfig().setUp()
+
+  val conf = ClusterConfig(songModel)
+  conf.setUp()
 
   private val titleView = new TitleView(songModel)
   private val metaDataView = new MetadataView(songModel)
   private val playListView = new PlayListView(songModel)
-  private val playerControlsView = new PlayerControlsView(songModel)
+  private val playerControlsView = new PlayerControlsView(songModel, conf)
   private val menu = new MenuView(songModel)
 
   private val hostIP: String = "127.0.0.1"
@@ -57,7 +70,6 @@ object Main extends JFXApp {
       val stylesheet = getClass.getResource("media.css")
       stylesheets.add(stylesheet.toString)
     }
-//    initSceneDragAndDrop(scene())
   }
 
 

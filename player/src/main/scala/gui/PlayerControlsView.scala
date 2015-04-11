@@ -1,7 +1,10 @@
+import java.io.File
+
 import module.SongModel
 
 import scalafx.Includes._
 import scalafx.application.Platform
+import scalafx.beans.property.ReadOnlyObjectProperty
 import scalafx.event.ActionEvent
 import scalafx.event.subscriptions.Subscription
 import scalafx.geometry.{Insets, Pos}
@@ -16,7 +19,7 @@ import scalafx.stage.FileChooser
 /**
  * Created by yangwu on 4/4/15.
  */
-class PlayerControlsView(songModel: SongModel) extends AbstractView(songModel) {
+class PlayerControlsView(songModel: SongModel, conf : ClusterConfig) extends AbstractView(songModel) {
   private var pauseImg: Image = _
   private var playImg: Image = _
   private var playPauseIcon: ImageView = _
@@ -107,7 +110,8 @@ class PlayerControlsView(songModel: SongModel) extends AbstractView(songModel) {
         val mediaPlayer = songModel.mediaPlayer()
         mediaPlayer.status() match {
           case Status.PLAYING.delegate => mediaPlayer.pause()
-          case _ => mediaPlayer.play()
+          case _ =>
+            conf.broadcast()  /** where it starts **/
         }
       }
     }
@@ -137,5 +141,13 @@ class PlayerControlsView(songModel: SongModel) extends AbstractView(songModel) {
 
   private def removeListenersAndBinding(mp: MediaPlayer) {
     statusInvalidationSubscription.cancel()
+  }
+
+  def playMusic(music:String): Unit = {
+    println("checkpoint")
+    val url:String = new File("./"+music+".mp3").toURI().toString()
+    println("URL: "+url)
+    songModel.url = url
+    songModel.mediaPlayer().play()
   }
 }
