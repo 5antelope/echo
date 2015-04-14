@@ -34,8 +34,8 @@ object Main extends JFXApp {
   private val playerControlsView = new PlayerControlsView(songModel, conf)
   private val menu = new MenuView(songModel)
 
-  private val hostIP: String = "127.0.0.1"
-  private val localIP: String = "127.0.0.1"
+  private val hostIP: String = "128.237.176.210"
+  private val localIP: String = "128.237.176.219"
 
   val root = new HBox {
     vgrow = Priority.ALWAYS
