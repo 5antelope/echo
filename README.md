@@ -1,7 +1,8 @@
 # Echo - Distributed Music System
+![ScreenShot](https://raw.github.com/wy4515/Echo/master/player/UI.png)
+
 Overview
 ---------------------------
-![ScreenShot](https://raw.github.com/wy4515/Echo/master/player/UI.png)
 
 Echo is a distributed music share application developed in Scala.
 
