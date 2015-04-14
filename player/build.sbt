@@ -6,6 +6,7 @@ scalaVersion := "2.11.6"
 
 assemblySettings
 
+
 libraryDependencies ++= Seq(
   "org.scalafx"            %% "scalafx"          % "8.0.31-R7",
   "org.scala-lang.modules" %% "scala-xml"        % "1.0.3",
@@ -25,7 +26,7 @@ resolvers += Opts.resolver.sonatypeSnapshots
 scalacOptions ++= Seq("-unchecked", "-deprecation", "-Xlint")
 
 
-unmanagedResourceDirectories in Compile <+= baseDirectory { _/"src/main/scala"}
+unmanagedResourceDirectories in Compile <+= baseDirectory { _/"src/main/scala/gui"}
 
 
 
@@ -35,3 +36,17 @@ shellPrompt := { state => System.getProperty("user.name") + ":" + Project.extrac
 fork := true
 
 fork in Test := true
+
+lazy val commonSettings = Seq(
+  version := "0.1-SNAPSHOT",
+  organization := "org.echo",
+  scalaVersion := "2.11.6"
+)
+
+lazy val app = (project in file(".")).
+  settings(commonSettings: _*).
+  settings(
+    name := "player",
+    javaOptions += "-Dfile.encoding=UTF-8",
+    fork in run := true
+  )
