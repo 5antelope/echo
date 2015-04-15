@@ -111,7 +111,8 @@ class PlayerControlsView(songModel: SongModel, conf : ClusterConfig) extends Abs
         mediaPlayer.status() match {
           case Status.PLAYING.delegate => mediaPlayer.pause()
           case _ =>
-            conf.broadcast()  /** where it starts **/
+            println(" - BROADCASTING: " + MusicName.name)
+            conf.broadcast(MusicName.name)  /** where it starts **/
         }
       }
     }

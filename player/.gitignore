@@ -4,4 +4,5 @@ project/*
 target/
 .idea/
 .idea_modules/
+*.mp3
 player.log

@@ -16,12 +16,12 @@ object Main extends JFXApp {
 
   private final val songModel = new SongModel() {
     //url = "http://traffic.libsyn.com/dickwall/JavaPosse373.mp3"
-    url = new File("./music.mp3").toURI().toString()
+    url = new File("./Rolling In The Deep.mp3").toURI().toString()
     print("URL: ")
     println(url)
   }
 
-  SongModel.url = new File("./music.mp3").toURI().toString()
+  SongModel.url = new File("./Rolling In The Deep.mp3").toURI().toString()
 
 //  ClusterConfig().setUp()
 

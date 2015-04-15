@@ -9,6 +9,6 @@ sealed trait RemoteMessage
 case class reject() extends RemoteMessage {
 
 }
-case class agree() extends RemoteMessage{
+case class agree(src:String) extends RemoteMessage{
 
 }
