@@ -60,14 +60,17 @@ class SimpleClusterListener() extends Actor with ActorLogging {
         member.address, previousStatus)
 
     case x:Play =>
-      sender ! agree()
+      println("- CHECK PLAY -" + x.musicName)
+      sender ! agree(x.musicName)
 
-    case requestPlay() =>
-      println(" -   BROADCASTING  -")
-      val songModel = new SongModel() {
-        url = new File("./music.mp3").toURI().toString()
-      }
-      mediator ! Publish ("content", new Play)
+    case requestPlay(src:String) =>
+      println(" -   BROADCASTING  - RECEIVE: " + src)
+//      val songModel = new SongModel() {
+//        url = new File("./music.mp3").toURI().toString()
+//      }
+      var sig = new Play
+      sig.musicName_=(src)
+      mediator ! Publish ("content", sig)
 
 
     case SubscribeAck(Subscribe("content", None, `self`)) =>
@@ -75,10 +78,10 @@ class SimpleClusterListener() extends Actor with ActorLogging {
     // context become ready
 
     case songModel:SongModel =>
-      println("哈哈哈哈哈哈哈哈")
       songModel.mediaPlayer().play()
 
-    case agree() =>
+    case agree(src) =>
+      println("- CHECK AGREE -" + src)
       val members = cluster.state.members.filter(_.status == MemberStatus.Up)
       countAgree+=1
       println("agree"+ countAgree + "size"+ members.size)
@@ -86,13 +89,15 @@ class SimpleClusterListener() extends Actor with ActorLogging {
         println("send")
         hassend=true
         mediator ! Publish("content",transferMusic())
-//        mediator ! Publish("content",startTime(java.lang.System.currentTimeMillis()+10000))
         val time = getNTPTime()
-        mediator ! Publish("content",startTime(time+10000))
+        mediator ! Publish("content",startTime(time+10000, src))
         println("over")
       }
 
+      // TODO:
     //   case reject() =>
+
+
     case transferMusic()=>
       println("receive music")
 
@@ -100,9 +105,9 @@ class SimpleClusterListener() extends Actor with ActorLogging {
       var cur = getNTPTime()
       println("start count down"+s.t + "current" + cur)
       val list = new PlayList()
-      list.select("") // update name
-      println("checkpoint "+MusicName.name)
-      val url:String = new File("./"+MusicName.name).toURI().toString()
+      list.select(s.name) // update name
+      println("- CHECK -  SRC: "+s.name+" REAL: "+MusicName.name)
+      val url:String = new File("./"+MusicName.name+".mp3").toURI().toString()
       println("URL: "+url)
       SongModel.url = url
       while (s.t > cur){
@@ -126,21 +131,14 @@ class SimpleClusterListener() extends Actor with ActorLogging {
   }
 
   def getNTPTime():Long= {
-
-//    val hosts = Array( "ntp02.oal.ul.pt", "ntp04.oal.ul.pt","ntp.xs4all.nl")
     val client = new NTPUDPClient();
     // We want to timeout if a response takes longer than 5 seconds
     client.setDefaultTimeout(5000);
 
-//    for ( host <- hosts) {
-
       try {
-//        val hostAddr = InetAddress.getByName(host);
-//        println("> " + hostAddr.getHostName() + "/" + hostAddr.getHostAddress());
         val hostAddr = InetAddress.getByName("ntp02.oal.ul.pt")
         val info = client.getTime(hostAddr);
         val date = new Date(info.getReturnTime());
-//        client.close();
         println(date)
         return date.getTime;
       }
@@ -149,7 +147,6 @@ class SimpleClusterListener() extends Actor with ActorLogging {
           client.close();
           e.printStackTrace();
       }
-//    }
     //   client.close();
     return -1;
   }

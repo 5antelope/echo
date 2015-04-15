@@ -103,15 +103,22 @@ case class pollResponse(status : Boolean) extends ClusterMessage {
 }
 
 case class Play()  extends ClusterMessage{
-  var musicName = "test music"
+  var _musicName = ""
+
+  // getter
+  def musicName = _musicName
+
+  // setter
+  def musicName_= (value:String):Unit = _musicName = value
 
 }
 case class transferMusic() extends ClusterMessage {
 
 }
 
-case class startTime(time: Long) extends ClusterMessage {
-  val t= time;
+case class startTime(time: Long, src:String) extends ClusterMessage {
+  val t= time
+  val name = src
 }
 
 object SongModel extends ClusterMessage  {

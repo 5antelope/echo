@@ -19,7 +19,8 @@ case class ClusterConfig(songModel: SongModel) {
     /** empty */
   }
 
-  def broadcast(): Unit = {
-    listener ! requestPlay()
+  def broadcast(s:String): Unit = {
+    println("- CHECK BROADCAST -" + s)
+    listener ! requestPlay(s)
   }
 }
