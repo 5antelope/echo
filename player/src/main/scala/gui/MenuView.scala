@@ -1,56 +1,76 @@
+import java.net.InetAddress
+
 import module.SongModel
 
 import scalafx.Includes._
 import scalafx.event.ActionEvent
-import scalafx.scene.Node
-import scalafx.scene.control.{Menu, MenuBar, MenuItem}
-import scalafx.scene.media.MediaPlayer
-import scalafx.stage.FileChooser
+import scalafx.geometry.{Insets, Pos}
+import scalafx.scene.{Scene, Node}
+import scalafx.scene.control._
+import scalafx.scene.layout.{HBox, StackPane, VBox}
+import scalafx.stage.{FileChooser, Popup}
 
 /**
  * Created by yangwu on 4/5/15.
  */
 
-class MenuView(songModel: SongModel) extends AbstractView(songModel) {
+class MenuView() {
 
-  def initView(): Node = {
-    val open = createOpenMenu()
+  val _pane = new StackPane {
 
-    new MenuBar() {
-      useSystemMenuBar = true
-      menus = List(
-        new Menu("root") {
-          items = List(
-            new MenuItem("Create"),
-            new MenuItem("Join")
+      val hostIp = new TextField {
+        prefColumnCount = 15
+      }
+      val hostPort = new TextField {
+        prefColumnCount = 4
+      }
+
+      padding = Insets(15)
+
+      children = List(
+        new HBox {
+          children = List(
+            new Label { // create space
+              prefHeight = 20
+            },
+            new HBox {
+              children = List(
+                new Label {
+                  text = "host ip"
+                  wrapText = true
+                },
+                hostIp,
+                new Label {
+                  text = "post"
+                  wrapText = true
+                },
+                hostPort
+              )
+            }
           )
         },
-        open
-      )
-    }
-  }
-
-  private def createOpenMenu() = new Menu("open") {
-    items = List (
-      new MenuItem ("music source") {
-        onAction ={
-          ae: ActionEvent => {
-            println(ae.eventType + " occurred on MenuItem open")
-
-            val fc = new FileChooser() {
-              title = "share your music"
-            }
-
-            val song = fc.showOpenDialog(viewNode.scene().window())
-
-            if (song != null) {
-              songModel.url = song.toURI.toString
-              songModel.mediaPlayer().play()
-            }
+        new Button("GO") {
+          onAction = {
+            e: ActionEvent =>
+              println("local: "+hostIp.text())
+              println("host: "+hostPort.text())
+              if (hostIp.text()!=InetAddress.getLocalHost.getHostAddress) {
+                val config = new ClusterConfig(hostIp.text(), hostPort.text())
+                Main.playerControlsView.setConfig(config)
+              }
+              println("----------   -----------")
+              Main.stage.scene = new Scene(Main.root, 500, 300) {
+                val stylesheet = getClass.getResource("media.css")
+                stylesheets.add(stylesheet.toString)
+              }
           }
+          alignmentInParent = Pos.BOTTOM_LEFT
+          margin = Insets(10, 0, 10, 0)
         }
-      }
-    )
-  }
+      )
+      prefHeight = 200
+      prefWidth = 300
+    }
 
+  def pane = _pane
 }
