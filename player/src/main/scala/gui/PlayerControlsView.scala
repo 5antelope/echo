@@ -22,7 +22,7 @@ import scalafx.stage.{Popup, FileChooser}
 /**
  * Created by yangwu on 4/4/15.
  */
-class PlayerControlsView(songModel: SongModel) extends AbstractView(songModel) {
+class PlayerControlsView(songModel: SongModel, ip:String, port:String) extends AbstractView(songModel) {
   private var pauseImg: Image = _
   private var playImg: Image = _
   private var playPauseIcon: ImageView = _
@@ -31,11 +31,7 @@ class PlayerControlsView(songModel: SongModel) extends AbstractView(songModel) {
   private var currentTimeSubscription: Subscription = _
   private var controlPanel: Node = _
 
-  private var config = new ClusterConfig(InetAddress.getLocalHost.getHostAddress,"33333")
-
-  def setConfig(conf:ClusterConfig): Unit = {
-    config = conf
-  }
+  private var config = new ClusterConfig(ip, port)
 
   songModel.mediaPlayer.onChange(
     (_, oldValue, newValue) => {

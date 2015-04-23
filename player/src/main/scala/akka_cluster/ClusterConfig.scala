@@ -19,6 +19,8 @@ class ClusterConfig(ip:String, port:String) {
     .withFallback(ConfigFactory.parseString("akka.cluster.seed-nodes=[\"akka.tcp://ClusterSystem@"+ip+":"+port+"\"]"))
     .withFallback(ConfigFactory.load())
 
+  println("- CONFIG: IP:PORT "+ip+":"+port)
+
   val system = ActorSystem("ClusterSystem", _config)
 
   val listener = system.actorOf(Props(classOf[SimpleClusterListener]), name = "SimpleClusterListener")

@@ -54,12 +54,13 @@ class MenuView() {
             e: ActionEvent =>
               println("local: "+hostIp.text())
               println("host: "+hostPort.text())
-              if (hostIp.text()!=InetAddress.getLocalHost.getHostAddress) {
-                val config = new ClusterConfig(hostIp.text(), hostPort.text())
-                Main.playerControlsView.setConfig(config)
-              }
+              val prim = new PrimaryView(hostIp.text(), hostPort.text())
+//              if (hostIp.text()!=InetAddress.getLocalHost.getHostAddress) {
+//                val config = new ClusterConfig(hostIp.text(), hostPort.text())
+//                Main.playerControlsView.setConfig(config)
+//              }
               println("----------   -----------")
-              Main.stage.scene = new Scene(Main.root, 500, 300) {
+              Main.stage.scene = new Scene(prim.root, 500, 300) {
                 val stylesheet = getClass.getResource("media.css")
                 stylesheets.add(stylesheet.toString)
               }
