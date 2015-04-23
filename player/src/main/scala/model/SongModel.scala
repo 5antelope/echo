@@ -4,6 +4,7 @@ import java.io.File
 import java.nio.file.Files
 import javafx.scene.{image => jfxsi}
 
+import akka.serialization.Serializer
 import sun.audio.AudioPlayer
 
 import scalafx.Includes._

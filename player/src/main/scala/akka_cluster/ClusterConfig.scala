@@ -1,3 +1,5 @@
+import java.net.InetAddress
+
 import akka.actor.{Props, ActorSystem}
 import com.typesafe.config.ConfigFactory
 import module.SongModel
@@ -6,12 +8,18 @@ import module.SongModel
  * Created by yangwu on 4/9/15.
  */
 
-case class ClusterConfig(songModel: SongModel) {
+class ClusterConfig(ip:String, port:String) {
 
-  val config = ConfigFactory.parseString("akka.remote.netty.tcp.port=" + "33333").
-    withFallback(ConfigFactory.load())
+//  val config = ConfigFactory.parseString("akka.remote.netty.tcp.port=" + "33333").
+//    withFallback(ConfigFactory.load())
 
-  val system = ActorSystem("ClusterSystem", config)
+
+  val _config = ConfigFactory.parseString("akka.remote.netty.tcp.hostname=\""+ InetAddress.getLocalHost.getHostAddress +"\"")
+    .withFallback(ConfigFactory.parseString("akka.remote.netty.tcp.port="+"33333"))
+    .withFallback(ConfigFactory.parseString("akka.cluster.seed-nodes=[\"akka.tcp://ClusterSystem@"+ip+":"+port+"\"]"))
+    .withFallback(ConfigFactory.load())
+
+  val system = ActorSystem("ClusterSystem", _config)
 
   val listener = system.actorOf(Props(classOf[SimpleClusterListener]), name = "SimpleClusterListener")
 
@@ -19,8 +27,11 @@ case class ClusterConfig(songModel: SongModel) {
     /** empty */
   }
 
+
   def broadcast(s:String): Unit = {
     println("- CHECK BROADCAST -" + s)
     listener ! requestPlay(s)
   }
+
+  def config = _config
 }

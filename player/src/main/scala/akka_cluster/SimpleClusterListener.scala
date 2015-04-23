@@ -4,6 +4,7 @@ import akka.actor.{Actor, ActorLogging}
 import akka.cluster.ClusterEvent._
 import akka.cluster.{Cluster, MemberStatus}
 import akka.contrib.pattern.{DistributedPubSubExtension, DistributedPubSubMediator}
+import akka.serialization.SerializationExtension
 import module._
 import sample.cluster.simple.agree
 
@@ -13,7 +14,10 @@ import java.net.InetAddress;
 import java.util.Date;
 
 import org.apache.commons.net.ntp.NTPUDPClient;
-import org.apache.commons.net.ntp.TimeInfo;
+import org.apache.commons.net.ntp.TimeInfo
+
+import scalax.io.{Output, Resource}
+;
 
 /**
  * Created by yangwu on 4/9/15.
@@ -63,14 +67,22 @@ class SimpleClusterListener() extends Actor with ActorLogging {
       println("- CHECK PLAY -" + x.musicName)
       sender ! agree(x.musicName)
 
+      // TODO:
     case requestPlay(src:String) =>
       println(" -   BROADCASTING  - RECEIVE: " + src)
-//      val songModel = new SongModel() {
-//        url = new File("./music.mp3").toURI().toString()
-//      }
       var sig = new Play
       sig.musicName_=(src)
       mediator ! Publish ("content", sig)
+//      val songModel = new SongModel()  {
+//        url = new File("./Rolling In The Deep.mp3").toURI().toString()
+//      }
+//      val serialization = SerializationExtension(context.system)
+//      val serializer = serialization.findSerializerFor(songModel)
+//      val bytes = serializer.toBinary(songModel)
+//      mediator ! Publish ("content", bytes)
+
+    case bytes: Array[Byte] =>
+      val output:Output = Resource.fromFile("someFile")
 
 
     case SubscribeAck(Subscribe("content", None, `self`)) =>
@@ -78,6 +90,7 @@ class SimpleClusterListener() extends Actor with ActorLogging {
     // context become ready
 
     case songModel:SongModel =>
+      println("- CHECK - SONGMODEL RECEIVED ")
       songModel.mediaPlayer().play()
 
     case agree(src) =>
@@ -116,6 +129,7 @@ class SimpleClusterListener() extends Actor with ActorLogging {
       println("start play"+cur)
 
       SongModel.mediaPlayer().play()
+
       hassend=false
 
     case s: String ⇒

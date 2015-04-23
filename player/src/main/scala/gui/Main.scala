@@ -9,6 +9,7 @@ import scalafx.scene.Scene
 import scalafx.scene.control.Label
 import scalafx.scene.input.{TransferMode, DragEvent}
 import scalafx.scene.layout.{BorderPane, HBox, Priority, VBox}
+import scalafx.stage.Popup
 
 object Main extends JFXApp {
 
@@ -23,28 +24,26 @@ object Main extends JFXApp {
 
   SongModel.url = new File("./Rolling In The Deep.mp3").toURI().toString()
 
-//  ClusterConfig().setUp()
-
-  val conf = ClusterConfig(songModel)
-  conf.setUp()
 
   private val titleView = new TitleView(songModel)
   private val metaDataView = new MetadataView(songModel)
   private val playListView = new PlayListView(songModel)
-  private val playerControlsView = new PlayerControlsView(songModel, conf)
-  private val menu = new MenuView(songModel)
+//  private val menu = new MenuView(songModel)
+
+  val playerControlsView = new PlayerControlsView(songModel)
 
   private val hostIP: String = "128.237.176.210"
   private val localIP: String = "128.237.176.219"
+
 
   val root = new HBox {
     vgrow = Priority.ALWAYS
     hgrow = Priority.ALWAYS
     children = List (
       new BorderPane {
-        top = new VBox() {
-          children = List(menu.viewNode, titleView.viewNode)
-        }
+//        top = new VBox() {
+//          children = List(menu.viewNode, titleView.viewNode)
+//        }
         center = new VBox() {
           children =
             metaDataView.viewNode
@@ -64,13 +63,15 @@ object Main extends JFXApp {
     )
   }
 
+  val menu = new MenuView()
+
+  var conf = null
+
   stage = new PrimaryStage {
     title = "Echo - Connecting Your Music"
-    scene = new Scene(root, 500, 300) {
+    scene = new Scene(menu.pane, 500, 300) {
       val stylesheet = getClass.getResource("media.css")
       stylesheets.add(stylesheet.toString)
     }
   }
-
-
 }
