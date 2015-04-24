@@ -1,22 +1,18 @@
 import java.io.File
 import java.net.InetAddress
 import java.util.Date
-import java.util.concurrent.Executor
 
-import akka.actor.{ReceiveTimeout, Actor, ActorLogging}
+import akka.actor.{Actor, ActorLogging, ReceiveTimeout}
 import akka.cluster.ClusterEvent._
-import akka.cluster.{VectorClock, Cluster, MemberStatus}
+import akka.cluster.{Cluster, MemberStatus, VectorClock}
 import akka.contrib.pattern.{DistributedPubSubExtension, DistributedPubSubMediator}
 import akka_cluster.FXUtils
 import module._
 import org.apache.commons.net.ntp.NTPUDPClient
-import sample.cluster.simple.{permitCS, rejectCS, agree, reject}
+import sample.cluster.simple.{agree, permitCS, reject, rejectCS}
 
-import scala.concurrent.{Future, ExecutionContext}
 import scala.concurrent.duration._
-import scalafx.application.Platform
 import scalax.io.{Output, Resource}
-import scala.concurrent.ExecutionContext.Implicits.global
 ;
 
 /**
@@ -218,16 +214,16 @@ class SimpleClusterListener() extends Actor with ActorLogging {
         mediator ! Publish("content",new release())
         println("over")
       }
-//      else if ((cursize%2==0) && (countAgree == cursize/2) && !hassend){
-//        context.setReceiveTimeout(Duration.Undefined)
-//        println("send")
-//        hassend=true
-//        mediator ! Publish("content",transferMusic())
-//        val time = getNTPTime()
-//        mediator ! Publish("content",startTime(time+10000,src))
-//        mediator ! Publish("content",new release())
-//        println("over")
-//      }
+      else if ((cursize%2==0) && (countAgree == cursize/2) && !hassend){
+        context.setReceiveTimeout(Duration.Undefined)
+        println("send")
+        hassend=true
+        mediator ! Publish("content",transferMusic())
+        val time = getNTPTime()
+        mediator ! Publish("content",startTime(time+10000,src))
+        mediator ! Publish("content",new release())
+        println("over")
+      }
 
     case reject()=>
       println("reject")
