@@ -12,3 +12,6 @@ case class reject() extends RemoteMessage {
 case class agree(src:String) extends RemoteMessage{
 
 }
+
+case class permitCS() extends RemoteMessage
+case class rejectCS() extends RemoteMessage

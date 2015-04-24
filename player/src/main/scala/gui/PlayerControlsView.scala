@@ -1,28 +1,26 @@
 import java.io.File
-import java.net.InetAddress
 
 import module.SongModel
 
 import scalafx.Includes._
 import scalafx.application.Platform
-import scalafx.beans.property.ReadOnlyObjectProperty
 import scalafx.event.ActionEvent
 import scalafx.event.subscriptions.Subscription
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.Node
-import scalafx.scene.control.{Label, Button}
+import scalafx.scene.control.{Button, Label}
 import scalafx.scene.image.{Image, ImageView}
-import scalafx.scene.layout.{BorderPane, StackPane, GridPane, HBox}
+import scalafx.scene.layout.{BorderPane, GridPane, HBox, StackPane}
 import scalafx.scene.media.MediaPlayer
 import scalafx.scene.media.MediaPlayer.Status
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Rectangle
-import scalafx.stage.{Popup, FileChooser}
+import scalafx.stage.Popup
 
 /**
  * Created by yangwu on 4/4/15.
  */
-class PlayerControlsView(songModel: SongModel, ip:String, port:String) extends AbstractView(songModel) {
+class PlayerControlsView(songModel: SongModel, ip:String, port:String, config:ClusterConfig) extends AbstractView(songModel) {
   private var pauseImg: Image = _
   private var playImg: Image = _
   private var playPauseIcon: ImageView = _
@@ -31,7 +29,6 @@ class PlayerControlsView(songModel: SongModel, ip:String, port:String) extends A
   private var currentTimeSubscription: Subscription = _
   private var controlPanel: Node = _
 
-  private var config = new ClusterConfig(ip, port)
 
   songModel.mediaPlayer.onChange(
     (_, oldValue, newValue) => {
@@ -161,6 +158,13 @@ class PlayerControlsView(songModel: SongModel, ip:String, port:String) extends A
     songModel.mediaPlayer().play()
   }
 
+  def showup(): Unit = {
+    val popWindow = createAlertPopup("ahahahah")
+    popWindow.show(Main.stage,
+      (Main.stage.width() - popWindow.width()) / 2.0 + Main.stage.x(),
+      (Main.stage.height() - popWindow.height()) / 2.0 + Main.stage.y())
+  }
+
   private def createAlertPopup(popupText: String) = new Popup {
     inner =>
     content.add(new StackPane {
@@ -186,7 +190,11 @@ class PlayerControlsView(songModel: SongModel, ip:String, port:String) extends A
             maxHeight = 140
             children = List(
               new Button("OK") {
-                onAction = { e: ActionEvent => inner.hide() }
+                onAction = { e: ActionEvent => {
+                    config.agree();
+                    inner.hide()
+                  }
+                }
                 alignmentInParent = Pos.BOTTOM_LEFT
                 margin = Insets(10, 0, 10, 0)
               },
@@ -202,4 +210,5 @@ class PlayerControlsView(songModel: SongModel, ip:String, port:String) extends A
     }.delegate
     )
   }
+
 }

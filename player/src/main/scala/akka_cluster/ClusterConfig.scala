@@ -10,10 +10,6 @@ import module.SongModel
 
 class ClusterConfig(ip:String, port:String) {
 
-//  val config = ConfigFactory.parseString("akka.remote.netty.tcp.port=" + "33333").
-//    withFallback(ConfigFactory.load())
-
-
   val _config = ConfigFactory.parseString("akka.remote.netty.tcp.hostname=\""+ InetAddress.getLocalHost.getHostAddress +"\"")
     .withFallback(ConfigFactory.parseString("akka.remote.netty.tcp.port="+"33333"))
     .withFallback(ConfigFactory.parseString("akka.cluster.seed-nodes=[\"akka.tcp://ClusterSystem@"+ip+":"+port+"\"]"))
@@ -35,5 +31,11 @@ class ClusterConfig(ip:String, port:String) {
     listener ! requestPlay(s)
   }
 
+  def agree() : Unit = {
+    println("- CHECK AGREE -")
+    listener ! localAgree()
+  }
+
   def config = _config
+
 }

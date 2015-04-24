@@ -18,13 +18,13 @@ class PrimaryView(ip:String, port:String) {
 
   SongModel.url = new File("./Rolling In The Deep.mp3").toURI().toString()
 
+  var config = new ClusterConfig(ip, port)
 
   private val titleView = new TitleView(songModel)
   private val metaDataView = new MetadataView(songModel)
-  private val playListView = new PlayListView(songModel)
-  //  private val menu = new MenuView(songModel)
+//  private val playListView = new PlayListView(songModel)
 
-  val playerControlsView = new PlayerControlsView(songModel, ip, port)
+  val playerControlsView = new PlayerControlsView(songModel, ip, port, config)
 
   private val hostIP: String = "128.237.176.210"
   private val localIP: String = "128.237.176.219"
@@ -35,9 +35,6 @@ class PrimaryView(ip:String, port:String) {
     hgrow = Priority.ALWAYS
     children = List (
       new BorderPane {
-        //        top = new VBox() {
-        //          children = List(menu.viewNode, titleView.viewNode)
-        //        }
         center = new VBox() {
           children =
             metaDataView.viewNode
@@ -52,7 +49,9 @@ class PrimaryView(ip:String, port:String) {
         maxWidth = 350
       },
       new VBox() {
-        children = playListView.viewNode
+        var playList = new PlayListView(config)
+        Main.playList = playList
+        children = playList.initView()
       }
     )
   }

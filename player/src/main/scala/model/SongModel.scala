@@ -1,5 +1,7 @@
 package module
 
+
+import akka.cluster.VectorClock
 import java.io.File
 import java.nio.file.Files
 import javafx.scene.{image => jfxsi}
@@ -16,6 +18,13 @@ import scalafx.scene.media.{Media, MediaPlayer}
  * Created by yangwu on 4/4/15.
  */
 sealed trait ClusterMessage
+
+case class requestCS(ts: VectorClock) extends ClusterMessage{
+  val t = ts
+}
+
+case class Vote(song:String) extends ClusterMessage
+case class release() extends ClusterMessage
 
 case class SongModel() extends ClusterMessage  {
 
@@ -107,7 +116,6 @@ case class Play()  extends ClusterMessage{
 
   // getter
   def musicName = _musicName
-
   // setter
   def musicName_= (value:String):Unit = _musicName = value
 

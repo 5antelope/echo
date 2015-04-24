@@ -2,7 +2,6 @@
     -fx-base: #aaa;
     -fx-background-color: black;
     -fx-background-color: radial-gradient(center 50% 50%, radius 60%, #111, #000);
-    -fx-background-image: url("/cross.png");
 }
 
 .button {
