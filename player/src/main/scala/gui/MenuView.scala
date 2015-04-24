@@ -20,6 +20,8 @@ import scalafx.stage.{FileChooser, Popup}
 
 class MenuView() {
 
+  private val titleView = new TitleView(null)
+
   val hostTag = new Text {
     text = "HOST IP"
     font = Font.font("SansSerif", FontWeight.BOLD, 20)
@@ -50,6 +52,21 @@ class MenuView() {
     }
   }
 
+  val goTag = new Text {
+    text = "JOIN"
+    font = Font.font("SansSerif", FontWeight.BOLD, 20)
+    style = "-fx-font-size: 20pt"
+    fill = new LinearGradient(
+      endX = 0,
+      stops = Stops(Cyan, DodgerBlue)
+    )
+    effect = new DropShadow {
+      color = DodgerBlue
+      radius = 25
+      spread = 0.25
+    }
+  }
+
   val _pane = new BorderPane() {
 
       val hostIp = new TextField { prefColumnCount = 15 }
@@ -57,7 +74,10 @@ class MenuView() {
 
       padding = Insets(15)
 
-      top = new Label { prefHeight = 100 }
+      top = new VBox() {
+        content = titleView.viewNode
+        minHeight = 120
+      }
 
       center = new HBox {
         children = List(
@@ -73,7 +93,8 @@ class MenuView() {
         )
       }
 
-      bottom = new Button("GO") {
+      bottom = new Button() {
+        graphic = goTag
         onAction = {
           e: ActionEvent =>
             println("local: "+hostIp.text())
@@ -85,8 +106,8 @@ class MenuView() {
               stylesheets.add(stylesheet.toString)
             }
         }
-        alignmentInParent = Pos.BOTTOM_LEFT
-        margin = Insets(10, 0, 10, 0)
+        alignmentInParent = Pos.BOTTOM_RIGHT
+        margin = Insets(10, 10, 10, 0)
       }
 
     }

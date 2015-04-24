@@ -21,11 +21,6 @@ class ClusterConfig(ip:String, port:String) {
 
   val listener = system.actorOf(Props(classOf[SimpleClusterListener]), name = "SimpleClusterListener")
 
-  def setUp(): Unit = {
-    /** empty */
-  }
-
-
   def broadcast(s:String): Unit = {
     println("- CHECK BROADCAST -" + s)
     listener ! requestPlay(s)
@@ -34,6 +29,11 @@ class ClusterConfig(ip:String, port:String) {
   def agree() : Unit = {
     println("- CHECK AGREE -")
     listener ! localAgree()
+  }
+
+  def disagree() : Unit = {
+    println("- CHECK DISAGREE -")
+    listener ! localReject()
   }
 
   def config = _config

@@ -24,7 +24,7 @@ case class PlayList() {
       arr.update(0, name)
       arr.update(idx, tmp)
     }
-    println("- UPDATED LIST: "+arr(0)+" "+arr(1))
+    println("- UPDATED LIST: "+arr(0)+"; "+arr(1))
     /** set music name **/
     MusicName.name = arr(0)
     println(MusicName.name)

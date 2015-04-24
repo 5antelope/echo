@@ -1,4 +1,5 @@
 import java.io.File
+import java.net.InetAddress
 
 import module.SongModel
 
@@ -22,12 +23,11 @@ class PrimaryView(ip:String, port:String) {
 
   private val titleView = new TitleView(songModel)
   private val metaDataView = new MetadataView(songModel)
-//  private val playListView = new PlayListView(songModel)
 
   val playerControlsView = new PlayerControlsView(songModel, ip, port, config)
 
   private val hostIP: String = "128.237.176.210"
-  private val localIP: String = "128.237.176.219"
+  private val localIP: String = InetAddress.getLocalHost.getHostAddress
 
 
   val _root = new HBox {
@@ -35,6 +35,9 @@ class PrimaryView(ip:String, port:String) {
     hgrow = Priority.ALWAYS
     children = List (
       new BorderPane {
+        top = new VBox() {
+          content = titleView.viewNode
+        }
         center = new VBox() {
           children =
             metaDataView.viewNode

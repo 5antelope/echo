@@ -93,7 +93,7 @@ class SimpleClusterListener() extends Actor with ActorLogging {
     case requestPlay(src:String) =>
       println(" -   BROADCASTING  - RECEIVE: " + src)
 
-      println("reuqest play")
+      currentSong = src
       if(state=="released" ){
         state="wanted"
         ts=ts.:+(name)
@@ -138,7 +138,7 @@ class SimpleClusterListener() extends Actor with ActorLogging {
 
     case release()=>
       // reset all value
-      println("release !!!")
+      println("- RELEASE -")
       context.setReceiveTimeout(Duration.Undefined)
       hassend = false
       countAgree = 0
@@ -148,7 +148,7 @@ class SimpleClusterListener() extends Actor with ActorLogging {
 
     // receive vote time out, release all.
     case ReceiveTimeout =>
-      println("time out")
+      println("- TIME OUT -")
       context.setReceiveTimeout(Duration.Undefined)
       mediator ! Publish("content",new release())
 
@@ -156,6 +156,7 @@ class SimpleClusterListener() extends Actor with ActorLogging {
     case Vote(song:String) =>
       println("vote")
       currentSender = sender()
+      currentSong = song
       // vote for itself
       if (sender == self) {
         println(song)
@@ -175,7 +176,7 @@ class SimpleClusterListener() extends Actor with ActorLogging {
     // vote agree/ disagree
     case localAgree()=>
       println("local agree")
-      currentSender ! agree(currentPlay.musicName)
+      currentSender ! agree(currentSong)
 
     case localReject()=>
       currentSender ! reject()
@@ -196,7 +197,7 @@ class SimpleClusterListener() extends Actor with ActorLogging {
 
     // receive voting, agree or reject
     case agree(src) =>
-      println("agree")
+      println("- AGREE - src: "+src)
       val cursize = cluster.state.members.filter(_.status == MemberStatus.Up).size
       countAgree+=1
 
@@ -207,20 +208,20 @@ class SimpleClusterListener() extends Actor with ActorLogging {
         hassend=true
         mediator ! Publish("content",transferMusic())
         val time = getNTPTime()
-        mediator ! Publish("content",startTime(time+10000, src))
+        mediator ! Publish("content",startTime(time+10000, currentSong))
         mediator ! Publish("content",new release())
         println("over")
       }
-//      else if ((cursize%2==0) && (countAgree == cursize/2) && !hassend){
-//        context.setReceiveTimeout(Duration.Undefined)
-//        println("send")
-//        hassend=true
-//        mediator ! Publish("content",transferMusic())
-//        val time = getNTPTime()
-//        mediator ! Publish("content",startTime(time+10000,src))
-//        mediator ! Publish("content",new release())
-//        println("over")
-//      }
+      else if ((cursize%2==0) && (countAgree == cursize/2) && !hassend){
+        context.setReceiveTimeout(Duration.Undefined)
+        println("send")
+        hassend=true
+        mediator ! Publish("content",transferMusic())
+        val time = getNTPTime()
+        mediator ! Publish("content",startTime(time+10000,src))
+        mediator ! Publish("content",new release())
+        println("over")
+      }
 
     case reject()=>
       println("reject")
@@ -232,7 +233,8 @@ class SimpleClusterListener() extends Actor with ActorLogging {
       }
 
     case transferMusic()=>
-      println("receive music")
+      println("- MOCK TRANSFER ... -")
+
 
     case s:startTime=>
       var cur = getNTPTime()
