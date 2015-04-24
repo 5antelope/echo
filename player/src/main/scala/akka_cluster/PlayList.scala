@@ -13,7 +13,7 @@ import scalafx.scene.media.MediaPlayer.Status
 
 case class PlayList() {
 
-  var arr = mutable.Buffer("Rolling In The Deep", "Heartbreaker")
+  var arr = mutable.Buffer("Rolling In The Deep", "Heartbreaker", "Radioactive")
 
   def select(name:String): Unit = {
     println("- PLAYLIST SELECT -"+name)
@@ -24,7 +24,7 @@ case class PlayList() {
       arr.update(0, name)
       arr.update(idx, tmp)
     }
-    println("- UPDATED LIST: "+arr(0)+"; "+arr(1))
+    println("- UPDATED LIST: "+arr(0)+"; "+arr(1)+"; "+arr(2))
     /** set music name **/
     MusicName.name = arr(0)
     println(MusicName.name)

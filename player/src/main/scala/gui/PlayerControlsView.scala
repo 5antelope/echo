@@ -41,8 +41,8 @@ class PlayerControlsView(songModel: SongModel, ip:String, port:String, config:Cl
   addListenersAndBindings(songModel.mediaPlayer())
 
   protected def initView(): Node = {
-    val likeButton = createLikeButton()
-    val hateButton = createHateButton()
+//    val likeButton = createLikeButton()
+//    val hateButton = createHateButton()
 
     controlPanel = createControlPanel()
 
@@ -53,8 +53,8 @@ class PlayerControlsView(songModel: SongModel, ip:String, port:String, config:Cl
     }
     // columnIndex: Int, rowIndex: Int, colspan: Int, rowspan: Int
     gp.add(controlPanel, 4, 0, 1, 2)
-    gp.add(likeButton, 5, 0, 1, 2)
-    gp.add(hateButton, 6, 0, 1, 2)
+//    gp.add(likeButton, 5, 0, 1, 2)
+//    gp.add(hateButton, 6, 0, 1, 2)
 
     gp
   }
@@ -67,21 +67,6 @@ class PlayerControlsView(songModel: SongModel, ip:String, port:String, config:Cl
     // TODO: spread out votes
     onAction = (ae: ActionEvent) => {
       println("- CAPTURE LIKE -")
-    }
-  }
-
-  private def createHateButton() = new Button {
-    id = "hateButton"
-    graphic = new ImageView {
-      image = new Image(this.getClass.getResourceAsStream("/down.png"), 30, 30, false, true)
-    }
-    // TODO: spread out votes
-    onAction = (ae: ActionEvent) => {
-      println("- CAPTURE DISLIKE -")
-      val popWindow = createAlertPopup("ahahahah")
-      popWindow.show(Main.stage,
-        (Main.stage.width() - popWindow.width()) / 2.0 + Main.stage.x(),
-        (Main.stage.height() - popWindow.height()) / 2.0 + Main.stage.y())
     }
   }
 
@@ -156,59 +141,6 @@ class PlayerControlsView(songModel: SongModel, ip:String, port:String, config:Cl
     println("URL: "+url)
     songModel.url = url
     songModel.mediaPlayer().play()
-  }
-
-  def showup(): Unit = {
-    val popWindow = createAlertPopup("ahahahah")
-    popWindow.show(Main.stage,
-      (Main.stage.width() - popWindow.width()) / 2.0 + Main.stage.x(),
-      (Main.stage.height() - popWindow.height()) / 2.0 + Main.stage.y())
-  }
-
-  private def createAlertPopup(popupText: String) = new Popup {
-    inner =>
-    content.add(new StackPane {
-      children = List(
-        new Rectangle {
-          width = 300
-          height = 200
-          arcWidth = 15
-          arcHeight = 15
-          fill = Color.Black
-          stroke = Color.Gray
-          strokeWidth = 2
-        },
-        new BorderPane {
-          center = new Label {
-            text = "Proposed Song: "+popupText
-            wrapText = true
-            maxWidth = 280
-            maxHeight = 140
-          }
-          bottom = new HBox {
-            maxWidth = 280
-            maxHeight = 140
-            children = List(
-              new Button("OK") {
-                onAction = { e: ActionEvent => {
-                    config.agree();
-                    inner.hide()
-                  }
-                }
-                alignmentInParent = Pos.BOTTOM_LEFT
-                margin = Insets(10, 0, 10, 0)
-              },
-              new Button("PASS") {
-                onAction = {e: ActionEvent => inner.hide()}
-                alignmentInParent = Pos.BOTTOM_RIGHT
-                margin = Insets(10, 0, 10, 0)
-              }
-            )
-          }
-        }
-      )
-    }.delegate
-    )
   }
 
 }

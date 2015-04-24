@@ -146,12 +146,6 @@ class SimpleClusterListener() extends Actor with ActorLogging {
       countCS = 0
       state = "released"
 
-    // receive vote time out, release all.
-    case ReceiveTimeout =>
-      println("- TIME OUT -")
-      context.setReceiveTimeout(Duration.Undefined)
-      mediator ! Publish("content",new release())
-
     // someone has entered the CS, ask for voting
     case Vote(song:String) =>
       println("vote")
@@ -170,6 +164,18 @@ class SimpleClusterListener() extends Actor with ActorLogging {
           println("- THREAD PROBLEM SOVLED? -")
           Main.playList.voting(song)
         }
+      }
+
+    case ReceiveTimeout =>
+      println("- TIME OUT -")
+      context.setReceiveTimeout(Duration.Undefined)
+      mediator ! Publish ("content", new timeOut())
+      mediator ! Publish("content",new release())
+
+    case timeOut() =>
+      println("- TIME OUT FROM REMOTE -")
+      FXUtils.runAndWait {
+        Main.playList.closePop()
       }
 
 
@@ -212,22 +218,26 @@ class SimpleClusterListener() extends Actor with ActorLogging {
         mediator ! Publish("content",new release())
         println("over")
       }
-      else if ((cursize%2==0) && (countAgree == cursize/2) && !hassend){
-        context.setReceiveTimeout(Duration.Undefined)
-        println("send")
-        hassend=true
-        mediator ! Publish("content",transferMusic())
-        val time = getNTPTime()
-        mediator ! Publish("content",startTime(time+10000,src))
-        mediator ! Publish("content",new release())
-        println("over")
-      }
+//      else if ((cursize%2==0) && (countAgree == cursize/2) && !hassend){
+//        context.setReceiveTimeout(Duration.Undefined)
+//        println("send")
+//        hassend=true
+//        mediator ! Publish("content",transferMusic())
+//        val time = getNTPTime()
+//        mediator ! Publish("content",startTime(time+10000,src))
+//        mediator ! Publish("content",new release())
+//        println("over")
+//      }
 
     case reject()=>
       println("reject")
       val cursize = cluster.state.members.filter(_.status == MemberStatus.Up).size
       countReject += 1
-      if (countReject> (cursize/2)){
+      if ((cursize%2==0) && countReject >= (cursize/2)){
+        context.setReceiveTimeout(Duration.Undefined)
+        mediator ! Publish("content",new release())
+      }
+      else if ((cursize%2==1) && countReject > (cursize/2)){
         context.setReceiveTimeout(Duration.Undefined)
         mediator ! Publish("content",new release())
       }
@@ -254,7 +264,6 @@ class SimpleClusterListener() extends Actor with ActorLogging {
 
     case s: String ⇒
       log.info("Got {}", s)
-
 
     case _: MemberEvent => // ignore
   }

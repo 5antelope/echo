@@ -1,15 +1,10 @@
-import javafx.event.EventHandler
-
-import module.SongModel
-
 import scalafx.Includes._
 import scalafx.collections.ObservableBuffer
 import scalafx.event.ActionEvent
-import scalafx.geometry.{Insets, Pos, Orientation}
+import scalafx.geometry.{Insets, Orientation, Pos}
 import scalafx.scene.Node
 import scalafx.scene.control.{Button, Label, ListView}
-import scalafx.scene.input.MouseEvent
-import scalafx.scene.layout.{HBox, BorderPane, StackPane}
+import scalafx.scene.layout.{BorderPane, HBox, StackPane}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Rectangle
 import scalafx.stage.Popup
@@ -22,8 +17,10 @@ class PlayListView (config:ClusterConfig) {
   /**
    * need actual play list here
    */
+  var pop = createAlertPopup("")
+
   def initView(): Node = {
-    val seq = Seq("Rolling In The Deep","Heartbreaker")
+    val seq = Seq("Rolling In The Deep","Heartbreaker", "Radioactive")
 
     val l = new ListView[String] {
       id = "playList"
@@ -47,7 +44,7 @@ class PlayListView (config:ClusterConfig) {
 
   def voting(song:String) : Unit = {
       println("VOTE: "+song)
-      val pop = createAlertPopup(song)
+      pop = createAlertPopup(song)
       println("- PLAY LIST VOTING ; THREAD -")
       pop.show(Main.stage,
         (Main.stage.width() - pop.width()) / 2.0 + Main.stage.x(),
@@ -110,5 +107,9 @@ class PlayListView (config:ClusterConfig) {
       )
     }.delegate
     )
+  }
+
+  def closePop() : Unit = {
+    pop.hide()
   }
 }

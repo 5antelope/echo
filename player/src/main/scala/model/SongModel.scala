@@ -107,6 +107,10 @@ case class poll() extends ClusterMessage {
   // empty
 }
 
+case class timeOut() extends ClusterMessage {
+
+}
+
 case class pollResponse(status : Boolean) extends ClusterMessage {
   val res = status
 }
