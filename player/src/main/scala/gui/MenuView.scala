@@ -24,7 +24,7 @@ class MenuView() {
 
   val hostTag = new Text {
     text = "HOST IP"
-    font = Font.font("SansSerif", FontWeight.BOLD, 20)
+    font = Font.font("SansSerif", FontWeight.Bold, 20)
     style = "-fx-font-size: 10pt"
     fill = new LinearGradient(
       endX = 0,
@@ -39,7 +39,7 @@ class MenuView() {
 
   val portTag = new Text {
     text = "PORT"
-    font = Font.font("SansSerif", FontWeight.BOLD, 20)
+    font = Font.font("SansSerif", FontWeight.Bold, 20)
     style = "-fx-font-size: 10pt"
     fill = new LinearGradient(
       endX = 0,
@@ -54,7 +54,7 @@ class MenuView() {
 
   val goTag = new Text {
     text = "JOIN"
-    font = Font.font("SansSerif", FontWeight.BOLD, 20)
+    font = Font.font("SansSerif", FontWeight.Bold, 20)
     style = "-fx-font-size: 20pt"
     fill = new LinearGradient(
       endX = 0,
@@ -65,6 +65,16 @@ class MenuView() {
       radius = 25
       spread = 0.25
     }
+  }
+
+  val descrip = new Text {
+    text = "  - enter your own ip address to create a cluster"
+    font = Font.font("SansSerif", FontWeight.Light, 20)
+    style = "-fx-font-size: 12pt"
+    fill = new LinearGradient(
+      endX = 0,
+      stops = Stops(Gray, Gray)
+    )
   }
 
   val _pane = new BorderPane() {
@@ -79,17 +89,21 @@ class MenuView() {
         minHeight = 120
       }
 
-      center = new HBox {
+      center = new VBox {
         children = List(
-          hostTag,
-          new Label {
-            prefWidth = 10
+          new HBox {
+            children = List(
+              hostTag,
+              new Label { prefWidth = 10 },
+              hostIp,
+              new Label { prefWidth = 20 },
+              portTag,
+              new Label { prefWidth = 10 },
+              hostPort
+            )
           },
-          hostIp,
-          new Label { prefWidth = 20 },
-          portTag,
-          new Label { prefWidth = 10 },
-          hostPort
+          new Label { prefHeight = 15 },
+          descrip
         )
       }
 

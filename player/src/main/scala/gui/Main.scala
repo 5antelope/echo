@@ -1,19 +1,11 @@
-import java.io.File
+import javafx.event.EventHandler
+import javafx.stage.WindowEvent
 
 import com.sun.javafx.runtime.VersionInfo
-import module.SongModel
 
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
-import scalafx.event.ActionEvent
-import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.Scene
-import scalafx.scene.control.{Button, Label}
-import scalafx.scene.input.{TransferMode, DragEvent}
-import scalafx.scene.layout._
-import scalafx.scene.paint.Color
-import scalafx.scene.shape.Rectangle
-import scalafx.stage.Popup
 
 object Main extends JFXApp {
 
@@ -29,5 +21,12 @@ object Main extends JFXApp {
       val stylesheet = getClass.getResource("media.css")
       stylesheets.add(stylesheet.toString)
     }
+    onCloseRequest = new EventHandler[WindowEvent]() {
+      override def handle(ev: WindowEvent) = {
+        playList.shutDown()
+        println("- CLOSING -")
+      }
+    }
   }
+
 }

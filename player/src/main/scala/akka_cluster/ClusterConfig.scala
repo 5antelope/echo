@@ -38,4 +38,9 @@ class ClusterConfig(ip:String, port:String) {
 
   def config = _config
 
+  def shutDown() : Unit = {
+    system.shutdown()
+    println("- SHUT DOWN? -")
+  }
+
 }

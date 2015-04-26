@@ -112,4 +112,10 @@ class PlayListView (config:ClusterConfig) {
   def closePop() : Unit = {
     pop.hide()
   }
+
+  def shutDown() : Unit = {
+    /* todo: shut down akka */
+    println("- SHUTDOWN FROM PLAY LIST -")
+    config.shutDown()
+  }
 }
