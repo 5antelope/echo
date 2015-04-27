@@ -23,8 +23,12 @@ object Main extends JFXApp {
     }
     onCloseRequest = new EventHandler[WindowEvent]() {
       override def handle(ev: WindowEvent) = {
-        playList.shutDown()
-        println("- CLOSING -")
+        try {
+          playList.shutDown()
+          println("- CLOSING -")
+        } catch {
+          case _ => stage.close()
+        }
       }
     }
   }

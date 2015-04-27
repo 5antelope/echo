@@ -16,23 +16,23 @@ class MetadataView(songModel: SongModel) extends AbstractView(songModel) {
 
   def initView(): Node = {
     val title = new Label {
-      text <== songModel.title
+      text <== SongModel.title
       id = "title"
     }
     val artist = new Label {
-      text <== songModel.artist
+      text <== SongModel.artist
       id = "artist"
     }
     val album = new Label {
-      text <== songModel.album
+      text <== SongModel.album
       id = "album"
     }
     val year = new Label {
-      text <== songModel.year
+      text <== SongModel.year
       id = "year"
     }
     val albumCover = new ImageView {
-      image <== songModel.albumCover
+      image <== SongModel.albumCover
       fitWidth = 95
       preserveRatio = true
       smooth = true

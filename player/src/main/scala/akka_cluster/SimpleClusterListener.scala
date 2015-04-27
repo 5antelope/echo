@@ -11,7 +11,9 @@ import module._
 import org.apache.commons.net.ntp.NTPUDPClient
 import sample.cluster.simple.{agree, permitCS, reject, rejectCS}
 
+import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.duration._
+import scalafx.collections.ObservableBuffer
 import scalax.io.{Output, Resource}
 ;
 
@@ -49,6 +51,7 @@ class SimpleClusterListener() extends Actor with ActorLogging {
 
   var currentPlay = new Play
 
+  var mem = new ObservableBuffer[String]()
 
   // subscribe to cluster changes, re-subscribe when restart
   override def preStart(): Unit = {
@@ -63,8 +66,11 @@ class SimpleClusterListener() extends Actor with ActorLogging {
       Info about join and leave clusters
      */
     case MemberUp(member) =>
-      println("test up")
       log.info("Member is Up: {}", member.address)
+      FXUtils.runAndWait {
+        mem += member.address.host.toString.substring(4)
+        Main.playList.updateMem(mem)
+      }
       println("show members")
       for (a <- members){
         println(a.address)
@@ -214,16 +220,16 @@ class SimpleClusterListener() extends Actor with ActorLogging {
         mediator ! Publish("content",new release())
         println("over")
       }
-      else if ((cursize%2==0) && (countAgree == cursize/2) && !hassend){
-        context.setReceiveTimeout(Duration.Undefined)
-        println("send")
-        hassend=true
-        mediator ! Publish("content",transferMusic())
-        val time = getNTPTime()
-        mediator ! Publish("content",startTime(time+10000,src))
-        mediator ! Publish("content",new release())
-        println("over")
-      }
+//      else if ((cursize%2==0) && (countAgree == cursize/2) && !hassend){
+//        context.setReceiveTimeout(Duration.Undefined)
+//        println("send")
+//        hassend=true
+//        mediator ! Publish("content",transferMusic())
+//        val time = getNTPTime()
+//        mediator ! Publish("content",startTime(time+10000,src))
+//        mediator ! Publish("content",new release())
+//        println("over")
+//      }
 
     case reject()=>
       println("reject")
@@ -240,6 +246,9 @@ class SimpleClusterListener() extends Actor with ActorLogging {
 
     case transferMusic()=>
       println("- MOCK TRANSFER ... -")
+      FXUtils.runAndWait {
+        Main.playList.closePop()
+      }
 
 
     case s:startTime=>
@@ -250,7 +259,9 @@ class SimpleClusterListener() extends Actor with ActorLogging {
       println("- CHECK -  SRC: "+s.name+" REAL: "+MusicName.name)
       val url:String = new File("./"+MusicName.name+".mp3").toURI().toString()
       println("URL: "+url)
-      SongModel.url = url
+      FXUtils.runAndWait {
+        SongModel.url = url
+      }
       while (s.t > cur){
         cur += 1
       }

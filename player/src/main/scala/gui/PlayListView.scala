@@ -1,10 +1,11 @@
+import scala.collection.mutable.ArrayBuffer
 import scalafx.Includes._
 import scalafx.collections.ObservableBuffer
 import scalafx.event.ActionEvent
 import scalafx.geometry.{Insets, Orientation, Pos}
 import scalafx.scene.Node
 import scalafx.scene.control.{Button, Label, ListView}
-import scalafx.scene.layout.{BorderPane, HBox, StackPane}
+import scalafx.scene.layout.{VBox, BorderPane, HBox, StackPane}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Rectangle
 import scalafx.stage.Popup
@@ -19,10 +20,18 @@ class PlayListView (config:ClusterConfig) {
    */
   var pop = createAlertPopup("")
 
-  def initView(): Node = {
-    val seq = Seq("Rolling In The Deep","Heartbreaker", "Radioactive")
+  val nodes = Seq("local")
+  var cons = new ListView[String] {
+    id = "playList"
+    items = ObservableBuffer(nodes)
+    orientation = Orientation.VERTICAL
+    maxWidth = 150
+  }
 
-    val l = new ListView[String] {
+  def initView(): Node = {
+    val seq = Seq("Rolling In The Deep","Alex Goot - Counting Stars", "Radioactive")
+
+    val list = new ListView[String] {
       id = "playList"
       items = ObservableBuffer(seq)
       orientation = Orientation.VERTICAL
@@ -37,6 +46,12 @@ class PlayListView (config:ClusterConfig) {
         }
       }
 
+    }
+
+    val l = new VBox {
+      children = List(
+        list, cons
+      )
     }
 
     l;
@@ -117,5 +132,9 @@ class PlayListView (config:ClusterConfig) {
     /* todo: shut down akka */
     println("- SHUTDOWN FROM PLAY LIST -")
     config.shutDown()
+  }
+
+  def updateMem(buf:ObservableBuffer[String]) : Unit = {
+    cons.items = buf
   }
 }
