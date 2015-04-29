@@ -82,6 +82,10 @@ class SimpleClusterListener() extends Actor with ActorLogging {
     case MemberRemoved(member, previousStatus) =>
       log.info("Member is Removed: {} after {}",
         member.address, previousStatus)
+      FXUtils.runAndWait {
+        mem -= member.address.host.toString.substring(4)
+        Main.playList.updateMem(mem)
+      }
 
     /*
       voting mechanism
@@ -287,7 +291,7 @@ class SimpleClusterListener() extends Actor with ActorLogging {
     client.setDefaultTimeout(5000);
 
     try {
-      val hostAddr = InetAddress.getByName("ntp02.oal.ul.pt")
+      val hostAddr = InetAddress.getByName("pool.ntp.org")
       val info = client.getTime(hostAddr);
       val date = new Date(info.getReturnTime());
       println(date)
