@@ -44,7 +44,7 @@ class PrimaryView(ip:String, port:String) {
         }
         bottom = new VBox() {
           children = List(playerControlsView.viewNode,
-            new Label(" Host IP: " + hostIP + "  Local IP: " + localIP) {
+            new Label("  Local IP: " + localIP) {
               id = "ip"
             }
           )
