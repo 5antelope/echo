@@ -25,7 +25,7 @@ class PlayListView (config:ClusterConfig) {
     id = "playList"
     items = ObservableBuffer(nodes)
     orientation = Orientation.VERTICAL
-    maxWidth = 150
+    maxWidth = 170
   }
 
   def initView(): Node = {
@@ -35,7 +35,7 @@ class PlayListView (config:ClusterConfig) {
       id = "playList"
       items = ObservableBuffer(seq)
       orientation = Orientation.VERTICAL
-      maxWidth = 150
+      maxWidth = 170
 
       selectionModel().selectedItem.onChange {
         (_, _, newValue) => {
