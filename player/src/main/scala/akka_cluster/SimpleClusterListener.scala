@@ -291,7 +291,7 @@ class SimpleClusterListener() extends Actor with ActorLogging {
     client.setDefaultTimeout(5000);
 
     try {
-      val hostAddr = InetAddress.getByName("pool.ntp.org")
+      val hostAddr = InetAddress.getByName("0.ubuntu.pool.ntp.org")
       val info = client.getTime(hostAddr);
       val date = new Date(info.getReturnTime());
       println(date)
