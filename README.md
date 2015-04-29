@@ -9,7 +9,7 @@ With Echo you can share your music with your friends. Play at same time in diffe
 
 ![ScreenShot](https://raw.github.com/wy4515/Echo/master/player/login.png)
 
-enter seed node's 'ip & port' (local ip & post if want to create a cluster)
+enter seed node's: `ip & port` (local ip & post if want to create a cluster)
 
 ![ScreenShot](https://raw.github.com/wy4515/Echo/master/player/UI.png)
 
