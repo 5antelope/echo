@@ -220,17 +220,17 @@ class SimpleClusterListener() extends Actor with ActorLogging {
         mediator ! Publish("content",new release())
         println("over")
       }
-      else if ((cursize%2==0) && (countAgree == cursize/2) && !hassend){
-        /** commnet this part if only two nodes */
-        context.setReceiveTimeout(Duration.Undefined)
-        println("send")
-        hassend=true
-        mediator ! Publish("content",transferMusic())
-        val time = getNTPTime()
-        mediator ! Publish("content",startTime(time+10000,src))
-        mediator ! Publish("content",new release())
-        println("over")
-      }
+      // else if ((cursize%2==0) && (countAgree == cursize/2) && !hassend){
+      //   /** commnet this part if only two nodes */
+      //   context.setReceiveTimeout(Duration.Undefined)
+      //   println("send")
+      //   hassend=true
+      //   mediator ! Publish("content",transferMusic())
+      //   val time = getNTPTime()
+      //   mediator ! Publish("content",startTime(time+10000,src))
+      //   mediator ! Publish("content",new release())
+      //   println("over")
+      // }
 
     case reject()=>
       println("reject")
