@@ -13,6 +13,8 @@ enter seed node's ip & port (local ip & post if want to create a cluster)
 
 ![ScreenShot](https://raw.github.com/wy4515/Echo/master/player/UI.png)
 
+![ScreenShot](https://raw.github.com/wy4515/Echo/master/player/Propose.png)
+
 Feature
 ---------------------------
 - propose a song and wait for majorities to agree
