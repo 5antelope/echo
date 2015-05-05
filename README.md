@@ -27,4 +27,4 @@ Features
 - proposal time out after 10 sec.
 - synchronized media player
 
-*Enjoy and have fun with music!
+** Enjoy and have fun with music!
