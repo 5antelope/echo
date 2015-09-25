@@ -27,4 +27,8 @@ Features
 - proposal time out after 10 sec.
 - synchronized media player
 
-** Enjoy and have fun with music!
+License
+---------------------------
+See the LICENSE file for license rights and limitations (MIT).
+
+** Enjoy and have fun with music! **
